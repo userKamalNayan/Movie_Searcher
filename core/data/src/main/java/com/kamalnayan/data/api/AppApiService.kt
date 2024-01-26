@@ -9,7 +9,6 @@ import retrofit2.http.Query
 Created on: 25/01/24
  **/
 interface AppApiService {
-    //https://www.omdbapi.com/?apikey=9cfa95f8&s=top&page=3
     @GET("?apikey=9cfa95f8")
     suspend fun searchMovie(
         @Query("s") searchQuery: String,
