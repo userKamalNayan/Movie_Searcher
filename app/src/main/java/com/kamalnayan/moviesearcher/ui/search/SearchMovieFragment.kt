@@ -25,8 +25,6 @@ class SearchMovieFragment :
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
          * @return A new instance of fragment SearchMovieFragment.
          */
 
@@ -42,6 +40,11 @@ class SearchMovieFragment :
     private var selectedViewType: @ViewType Int = ViewType.VIEW_TYPE_GRID
 
     private val viewModel by viewModels<SearchViewModel>()
+
+    /**
+     * used to hold currently selected sort option.
+     * By default [SearchResultModifier.SortByDefault] is selected
+     */
     private var selectedModifier: SearchResultModifier = SearchResultModifier.SortByDefault
         set(value) {
             field = value
@@ -49,17 +52,12 @@ class SearchMovieFragment :
             setIndicatorVisibility()
         }
 
-    private fun setIndicatorVisibility() {
-        binding.toolbar.ivFilterActive.isVisible =
-            selectedModifier !is SearchResultModifier.SortByDefault
-    }
-
     override fun fetchData() {
         viewModel.searchMovie("top")
     }
 
     override fun setViewModelToBinding() {
-
+        binding.vm = viewModel
     }
 
     override fun initViews() {
@@ -70,13 +68,12 @@ class SearchMovieFragment :
     }
 
     override fun setData() {
-
+        // do nothing
     }
 
     override fun setListeners() {
         with(binding)
         {
-
             epoxyRecycler.loadMoreListener {
                 if (viewModel.canLoadMore) {
                     viewModel.searchMovie("top")
@@ -93,6 +90,29 @@ class SearchMovieFragment :
         }
     }
 
+    override fun setObservers() {
+        with(viewModel) {
+            moviesList.observe(viewLifecycleOwner) { response ->
+                response?.let {
+                    controller.searchResults = it
+
+                }
+            }
+        }
+    }
+
+    /**
+     * Sets visibility of indicator to show if any sorting is applied or not
+     */
+    private fun setIndicatorVisibility() {
+        binding.toolbar.ivFilterActive.isVisible =
+            selectedModifier !is SearchResultModifier.SortByDefault
+    }
+
+    /**
+     * Shows [BtsSearchResultModifier] when [R.id.iv_more]
+     * is clicked
+     */
     private fun handleShowFilterClick() {
         val bottomSheet = BtsSearchResultModifier()
         bottomSheet.apply {
@@ -104,6 +124,11 @@ class SearchMovieFragment :
         bottomSheet.show(childFragmentManager, null)
     }
 
+    /**
+     * Updates layout manager on click of [R.id.iv_view_type_selector]
+     * [GridLayoutManager] or [LinearLayoutManager] is applied to
+     * [R.id.epoxy_recycler] as per user selection
+     */
     private fun handleViewTypeSelectorClick() {
         with(binding) {
             when (selectedViewType) {
@@ -128,17 +153,5 @@ class SearchMovieFragment :
 
     private fun setSelectorImageRes(@DrawableRes resId: Int) {
         binding.toolbar.ivViewTypeSelector.setImageResource(resId)
-    }
-
-
-    override fun setObservers() {
-        with(viewModel) {
-            moviesList.observe(viewLifecycleOwner) { response ->
-                response?.let {
-                    controller.searchResults = it
-
-                }
-            }
-        }
     }
 }

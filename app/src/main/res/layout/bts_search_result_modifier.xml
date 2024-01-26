@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_bottomsheet"
-        android:minHeight="300dp"
         android:paddingHorizontal="@dimen/horizontal_padding"
         android:paddingVertical="@dimen/vertical_padding">
 
@@ -37,6 +36,7 @@
             android:text="Sort By"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="@dimen/bottom_margin_large"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_sort_by" />
     </androidx.constraintlayout.widget.ConstraintLayout>

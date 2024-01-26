@@ -63,6 +63,8 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
                 return@launch
             isLoading = true
             pageNumber++
+            if (pageNumber == 1)
+                _isFirstPageLoading.postValue(true)
 
             val response = searchMovieUseCase(Pair(searchQuery, pageNumber))
             response?.suspendOnSuccess {
@@ -75,8 +77,10 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
     }
 
     /**
-     * handles the success case of network result for
-     * search api
+     * handles the success case of network result for search api
+     *
+     * calling [getModifiedMoviesList] because if any modifier is applied then
+     * new data should be shown after performing sorting
      */
     private suspend fun handleSearchSuccess(data: SearchResponse) {
         if (data.response == false) {// case: error occurred and response has no data
@@ -93,6 +97,7 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
                 val finalList = getModifiedMoviesList(updatedList)
                 _moviesModifiedList.postValue(finalList)
             } else { // for first page
+                _isFirstPageLoading.postValue(false)
                 movieRawList = data.results
                 val resultWithRandomRating = data.results.map { it.setRandomRating() }
                 _moviesModifiedList.postValue(getModifiedMoviesList(resultWithRandomRating))

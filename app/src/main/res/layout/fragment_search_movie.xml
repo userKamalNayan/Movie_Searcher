@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="vm"
+            type="com.kamalnayan.commons.base.BaseViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -12,6 +15,17 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         tools:context=".ui.search.SearchMovieFragment">
+
+        <include
+            android:id="@+id/progress_layout"
+            app:isVisible="@{vm.isFirstPageLoading()}"
+            layout="@layout/layout_loader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <include
             android:id="@+id/toolbar"
@@ -30,11 +44,11 @@
             android:orientation="vertical"
             app:itemSpacing="10dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:spanCount="2"
             tools:itemCount="3" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -57,11 +57,11 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
                     android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_list"
-                    app:tint="#898989"
+                    android:src="@drawable/ic_grid"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/iv_more"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="#898989" />
 
                 <ImageView
                     android:id="@+id/iv_more"

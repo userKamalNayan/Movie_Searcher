@@ -27,4 +27,5 @@ object Versions {
     const val shimmer = "0.5.0"
     const val room = "2.5.2"
     const val paging = "3.2.1"
+    const val kotlinVersion ="1.9.22"
 }

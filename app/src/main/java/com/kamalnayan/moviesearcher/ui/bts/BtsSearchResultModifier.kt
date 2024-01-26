@@ -1,6 +1,5 @@
 package com.kamalnayan.moviesearcher.ui.bts
 
-import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.allViews
@@ -27,21 +26,21 @@ class BtsSearchResultModifier :
 
     /**
      * Callback for selection change.
-     * invoked when value is changed of [sortAndFilterSelection]
-     * @see [sortAndFilterSelection]
+     * invoked when value is changed of [selectedSortOption]
+     * @see [selectedSortOption]
      */
     private var selectionChangedListener: SearchModifierSelectionCallback = null
 
     private val sortingOptions =
         SearchResultModifier::class.sealedSubclasses.map { (it.objectInstance as SearchResultModifier) }
-    private var sortAndFilterSelection: SearchResultModifier = SearchResultModifier.SortByDefault
+    private var selectedSortOption: SearchResultModifier = SearchResultModifier.SortByDefault
         set(value) {
             field = value
             selectionChangedListener?.invoke(value)
         }
 
-    fun setSelectedModifier(sortAndFilterSelection: SearchResultModifier) {
-        this.sortAndFilterSelection = sortAndFilterSelection
+    fun setSelectedModifier(searchResultModifier: SearchResultModifier) {
+        this.selectedSortOption = searchResultModifier
     }
 
     fun setSelectionChangedListener(selectionChangedListener: SearchModifierSelectionCallback) {
@@ -50,16 +49,32 @@ class BtsSearchResultModifier :
 
 
     override fun fetchData() {
-
+        // do nothing
     }
 
     override fun setViewModelToBinding() {
-
+        // do nothing
     }
 
     override fun initViews() {
         setupRadioButtons()
         setupSelectedOption()
+    }
+
+    override fun setData() {
+        // do nothing
+    }
+
+    override fun setListeners() {
+        with(binding) {
+            radioGroup.setOnCheckedChangeListener { radioGroup, i ->
+                handleSortRadioClick()
+            }
+        }
+    }
+
+    override fun setObservers() {
+
     }
 
     /**
@@ -71,14 +86,15 @@ class BtsSearchResultModifier :
             ConstraintLayout.LayoutParams.MATCH_PARENT,
             ConstraintLayout.LayoutParams.WRAP_CONTENT
         ).apply {
-            setMargins(0,12.px,0,0.px)
+            setMargins(4.px, 12.px, 4.px, 0.px)
         }
+
         sortingOptions.forEach {
-            val text = it.getNameResourceId().toStringFromResourceId()
+            val title = it.getTitleResourceId().toStringFromResourceId()
             val radioButton = RadioButton(requireContext())
             radioButton.apply {
-                this.text = text
-                tag = it.getNameResourceId()
+                this.text = title
+                tag = it.getTitleResourceId()
                 this.layoutParams = layoutParams
             }
             binding.radioGroup.addView(radioButton)
@@ -91,33 +107,20 @@ class BtsSearchResultModifier :
      */
     private fun setupSelectedOption() {
         val requiredRadioView =
-            binding.radioGroup.allViews.find { it.tag == sortAndFilterSelection.getNameResourceId() }
+            binding.radioGroup.allViews.find { it.tag == selectedSortOption.getTitleResourceId() }
                 ?: return
         binding.radioGroup.check(requiredRadioView.id)
     }
 
 
-    override fun setData() {
-
-    }
-
-    override fun setListeners() {
-        with(binding) {
-            radioGroup.setOnCheckedChangeListener { radioGroup, i ->
-                handleSortRadioClick(i)
-            }
-        }
-    }
-
-    private fun handleSortRadioClick(i: Int) {
-        val tag =
-            binding.radioGroup.findViewById<RadioButton>(binding.radioGroup.checkedRadioButtonId).tag
-        val selectedOption = sortingOptions.find { it.getNameResourceId() == tag } ?: return
-        selectionChangedListener?.invoke(selectedOption)
-    }
-
-
-    override fun setObservers() {
-
+    /**
+     * Gets the selected radio button and updates [selectedSortOption]
+     */
+    private fun handleSortRadioClick() {
+        val selectedRadioId= binding.radioGroup.checkedRadioButtonId
+        val selectedRadioTag =
+            binding.radioGroup.findViewById<RadioButton>(selectedRadioId).tag
+        val selectedOption = sortingOptions.find { it.getTitleResourceId() == selectedRadioTag } ?: return
+        selectedSortOption = selectedOption
     }
 }

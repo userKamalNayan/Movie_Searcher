@@ -7,13 +7,13 @@ Created on: 26/01/24
  **/
 sealed class SearchResultModifier {
 
-    abstract fun getNameResourceId(): Int
+    abstract fun getTitleResourceId(): Int
 
     /**
      * data is sorted by [com.kamalnayan.commons.response.model.SearchItem.year]
      */
     data object SortByYear : SearchResultModifier() {
-        override fun getNameResourceId(): Int {
+        override fun getTitleResourceId(): Int {
             return R.string.text_sort_by_year
         }
 
@@ -23,7 +23,7 @@ sealed class SearchResultModifier {
      * data is sorted by [com.kamalnayan.commons.response.model.SearchItem.rating]
      */
     data object SortByRating : SearchResultModifier() {
-        override fun getNameResourceId(): Int {
+        override fun getTitleResourceId(): Int {
             return R.string.text_sort_by_rating
         }
     }
@@ -32,7 +32,7 @@ sealed class SearchResultModifier {
      * in this case the data is presented as it was received
      */
     data object SortByDefault : SearchResultModifier() {
-        override fun getNameResourceId(): Int {
+        override fun getTitleResourceId(): Int {
             return R.string.text_sort_by_default
         }
     }
