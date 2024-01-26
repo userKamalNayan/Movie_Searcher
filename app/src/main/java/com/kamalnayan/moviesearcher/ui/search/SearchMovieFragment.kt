@@ -94,8 +94,10 @@ class SearchMovieFragment :
         with(viewModel) {
             moviesList.observe(viewLifecycleOwner) { response ->
                 response?.let {
-                    controller.searchResults = it
-
+                    controller.apply {
+                        searchResults = it
+                        canLoadMore = viewModel.canLoadMore
+                    }
                 }
             }
         }

@@ -13,6 +13,7 @@ import com.skydoves.sandwich.onFailure
 import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -65,7 +66,7 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
             pageNumber++
             if (pageNumber == 1)
                 _isFirstPageLoading.postValue(true)
-
+            delay(5000)
             val response = searchMovieUseCase(Pair(searchQuery, pageNumber))
             response?.suspendOnSuccess {
                 handleSearchSuccess(this.data)
