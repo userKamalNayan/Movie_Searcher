@@ -2,7 +2,7 @@
     <string name="app_name">Movie Searcher</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="text_movie_searcher">Movie Searcher</string>
+    <string name="text_movie_searcher">Search a movie</string>
     <string name="text_sort_by_year">Year</string>
     <string name="text_sort_by_rating">Rating</string>
     <string name="text_sort_by_default">Default</string>

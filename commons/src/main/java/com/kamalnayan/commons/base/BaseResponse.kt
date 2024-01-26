@@ -13,4 +13,7 @@ open class BaseResponse : Parcelable {
 
     @SerializedName("Response")
     val response: Boolean? =null
+
+    @SerializedName("Error")
+    val errorMessage: String? =null
 }

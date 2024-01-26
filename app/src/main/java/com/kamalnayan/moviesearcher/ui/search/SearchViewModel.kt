@@ -80,11 +80,18 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
     val error: LiveData<String> by lazy { _error }
 
 
+    fun resetPage(){
+        hasMoreData=true
+        pageNumber=0
+    }
     /**
      * Searches movie using [searchQuery] by making
      * api call to remote.
      */
     fun searchMovie(searchQuery: String) {
+        if(searchQuery.isNullOrBlank())
+            return
+
         viewModelScope.launch {
             if (isLoading)
                 return@launch
@@ -97,8 +104,14 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
             response?.suspendOnSuccess {
                 handleSearchSuccess(this.data)
             }?.onFailure {
+                isLoading=false
+                _isFirstPageLoading.postValue(false)
                 _error.postValue(this)
                 Log.d("api", "searchMovie: failure $this")
+            }?:{
+                isLoading=false
+                _isFirstPageLoading.postValue(false)
+                _error.postValue("Some error occurred")
             }
         }
     }
@@ -111,8 +124,12 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
      */
     private suspend fun handleSearchSuccess(data: SearchResponse) {
         if (data.response == false) {// case: error occurred and response has no data
-            canLoadMore = false
-            _error.postValue("no more data")
+            hasMoreData = false
+            isLoading=false
+            _isFirstPageLoading.postValue(false)
+            if(pageNumber==1) {
+                _error.postValue(data.errorMessage.orEmpty())
+            }
             return
         }
         withContext(Dispatchers.Default) {

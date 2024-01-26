@@ -1,13 +1,18 @@
 package com.kamalnayan.moviesearcher.ui.search
 
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.airbnb.epoxy.DiffResult
+import com.airbnb.epoxy.OnModelBuildFinishedListener
 import com.kamalnayan.commons.annotation.ViewType
 import com.kamalnayan.commons.base.BaseFragment
+import com.kamalnayan.commons.extensions.Empty
 import com.kamalnayan.commons.extensions.loadMoreListener
 import com.kamalnayan.commons.modifier.SearchResultModifier
 import com.kamalnayan.moviesearcher.R
@@ -37,6 +42,7 @@ class SearchMovieFragment :
         SearchMovieController()
     }
 
+    private var searchQuery=String.Empty
 
     private var selectedViewType: @ViewType Int = ViewType.VIEW_TYPE_GRID
 
@@ -54,7 +60,7 @@ class SearchMovieFragment :
         }
 
     override fun fetchData() {
-        viewModel.searchMovie("top")
+        viewModel.searchMovie(searchQuery)
     }
 
     override fun setViewModelToBinding() {
@@ -78,18 +84,49 @@ class SearchMovieFragment :
             epoxyRecycler.loadMoreListener(threshold = 1) {
                 if (viewModel.canLoadMore) {
                     Log.d("load-more", "setListeners: FETCHING more data  ")
-                    viewModel.searchMovie("top")
+                    viewModel.run {
+                        searchMovie(searchQuery)
+                    }
                 }
             }
 
-            toolbar.ivViewTypeSelector.setOnClickListener {
-                handleViewTypeSelectorClick()
-            }
+            with(toolbar) {
+                ivViewTypeSelector.setOnClickListener {
+                    handleViewTypeSelectorClick()
+                }
 
-            toolbar.ivMore.setOnClickListener {
-                handleShowFilterClick()
+                ivMore.setOnClickListener {
+                    handleShowFilterClick()
+                }
+
+                searchView.setOnQueryTextListener(object : OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        onNewQuery()
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        return false
+                    }
+
+                })
             }
         }
+    }
+
+    /**
+     * Invoked when new search query is used for api call
+     */
+    private fun onNewQuery() {
+        searchQuery = binding.toolbar.searchView.query.toString()
+        viewModel.resetPage()
+        viewModel.searchMovie(searchQuery)
+        controller.addModelBuildListener(object : OnModelBuildFinishedListener{
+            override fun onModelBuildFinished(result: DiffResult) {
+                binding.epoxyRecycler.scrollToPosition(0)
+                controller.removeModelBuildListener(this)
+            }
+        })
     }
 
     override fun setObservers() {
@@ -100,6 +137,13 @@ class SearchMovieFragment :
                         searchResults = it
                         canLoadMore = viewModel.canLoadMore
                     }
+                }
+            }
+
+            error.observe(viewLifecycleOwner) { response ->
+                response?.let {
+                    controller.canLoadMore = viewModel.canLoadMore
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 }
             }
         }
