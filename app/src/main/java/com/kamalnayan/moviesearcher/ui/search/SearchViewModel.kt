@@ -15,6 +15,7 @@ import com.skydoves.sandwich.onFailure
 import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -28,6 +29,7 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
 
     private var pageNumber: Int = 0
     private var isLoading = false
+    private var searchJob: Job? = null
 
     var lastResponseTime: Long = 0
 
@@ -83,6 +85,7 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
     fun resetPage() {
         hasMoreData = true
         pageNumber = 0
+        isLoading=false
     }
 
     /**
@@ -91,20 +94,24 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
      */
     fun searchMovie(searchQuery: String) {
         if (searchQuery.isNullOrBlank()) {
+            searchJob?.cancel()
             _moviesModifiedList.postValue(SearchItemVO.AssistedSearch)
             resetPage()
             return
         }
 
-        viewModelScope.launch {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
             if (isLoading)
                 return@launch
 
             isLoading = true
             pageNumber++
 
-            if (pageNumber == 1)
+            if (pageNumber == 1) {
                 _isFirstPageLoading.postValue(true)
+                _moviesModifiedList.postValue(SearchItemVO.Empty)
+            }
 
             val response = searchMovieUseCase(Pair(searchQuery, pageNumber))
             response?.suspendOnSuccess {

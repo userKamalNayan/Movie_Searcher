@@ -19,7 +19,26 @@ Created on: 26/01/24
 class SearchMovieController : AsyncEpoxyController() {
 
     companion object {
-        private val ASSISTED_SEARCH_QUERY= listOf("equalizer","the wolf","top")
+        private val ASSISTED_SEARCH_QUERY = listOf(
+            "Avengers",
+            "Oppenheimer",
+            "Ford",
+            "2012",
+            "Aviator",
+            "Prey",
+            "Mia",
+            "Nun",
+            "Equalizer",
+            "The wolf",
+            "Top",
+            "Inception",
+            "Casablanca",
+            "Godfather",
+            "Goodfellas",
+            "Titanic",
+            "Se7en",
+            "The Departed"
+        )
     }
 
     var onAssistedSearchClick: ((String) -> Unit)? = null
@@ -52,6 +71,10 @@ class SearchMovieController : AsyncEpoxyController() {
 
             is SearchItemVO.SearchResult -> {
                 buildSearchItems()
+            }
+
+            is SearchItemVO.Empty -> {
+                // do nothing , as view needs to be empty
             }
 
             null -> {

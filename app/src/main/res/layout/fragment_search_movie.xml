@@ -30,6 +30,7 @@
         <include
             android:id="@+id/toolbar"
             layout="@layout/layout_toolbar"
+            app:layout_constraintVertical_bias="0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@id/epoxy_recycler"
@@ -41,7 +42,9 @@
             android:id="@+id/epoxy_recycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            app:isVisible="@{!vm.isFirstPageLoading()}"
             android:orientation="vertical"
+            android:paddingHorizontal="@dimen/horizontal_padding_small"
             app:itemSpacing="10dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
