@@ -34,6 +34,7 @@ fun EpoxyRecyclerView.loadMoreListener(threshold: Int = 6, loadMoreData: () -> U
             val totalItems = this@loadMoreListener.adapter?.itemCount?:return
 
             if ((lastVisibleItemPosition + threshold) >= totalItems) {
+                Log.d("load-more", "onScrolled:  $lastVisibleItemPosition and total = $totalItems")
                 loadMoreData.invoke()
             }
         }

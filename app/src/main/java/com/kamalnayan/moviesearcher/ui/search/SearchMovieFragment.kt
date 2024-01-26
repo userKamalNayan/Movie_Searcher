@@ -1,5 +1,6 @@
 package com.kamalnayan.moviesearcher.ui.search
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -74,8 +75,9 @@ class SearchMovieFragment :
     override fun setListeners() {
         with(binding)
         {
-            epoxyRecycler.loadMoreListener {
+            epoxyRecycler.loadMoreListener(threshold = 1) {
                 if (viewModel.canLoadMore) {
+                    Log.d("load-more", "setListeners: FETCHING more data  ")
                     viewModel.searchMovie("top")
                 }
             }
