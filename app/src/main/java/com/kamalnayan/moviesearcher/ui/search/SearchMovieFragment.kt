@@ -42,7 +42,7 @@ class SearchMovieFragment :
         SearchMovieController()
     }
 
-    private var searchQuery=String.Empty
+    private var searchQuery = String.Empty
 
     private var selectedViewType: @ViewType Int = ViewType.VIEW_TYPE_GRID
 
@@ -101,15 +101,22 @@ class SearchMovieFragment :
 
                 searchView.setOnQueryTextListener(object : OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
-                        onNewQuery()
+                        onNewQuery(query.toString())
                         return false
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        return false
+                        onNewQuery(newText.toString())
+                        return true
                     }
 
                 })
+            }
+
+            with(controller) {
+                onAssistedSearchClick = {
+                    binding.toolbar.searchView.setQuery(it,true)
+                }
             }
         }
     }
@@ -117,11 +124,14 @@ class SearchMovieFragment :
     /**
      * Invoked when new search query is used for api call
      */
-    private fun onNewQuery() {
-        searchQuery = binding.toolbar.searchView.query.toString()
+    private fun onNewQuery(newQuery: String) {
+        if (searchQuery == newQuery)
+            return
+
+        searchQuery = newQuery
         viewModel.resetPage()
         viewModel.searchMovie(searchQuery)
-        controller.addModelBuildListener(object : OnModelBuildFinishedListener{
+        controller.addModelBuildListener(object : OnModelBuildFinishedListener {
             override fun onModelBuildFinished(result: DiffResult) {
                 binding.epoxyRecycler.scrollToPosition(0)
                 controller.removeModelBuildListener(this)
@@ -134,7 +144,7 @@ class SearchMovieFragment :
             moviesList.observe(viewLifecycleOwner) { response ->
                 response?.let {
                     controller.apply {
-                        searchResults = it
+                        searchViewObject = it
                         canLoadMore = viewModel.canLoadMore
                     }
                 }

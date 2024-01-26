@@ -28,4 +28,5 @@ object Versions {
     const val room = "2.5.2"
     const val paging = "3.2.1"
     const val kotlinVersion ="1.9.22"
+    const val lottieVersion="5.2.0"
 }

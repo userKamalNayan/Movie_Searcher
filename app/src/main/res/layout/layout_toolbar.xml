@@ -29,6 +29,7 @@
                     android:id="@+id/search_view"
                     android:layout_gravity="end"
                     app:iconifiedByDefault="false"
+                    app:searchIcon="@drawable/ic_search"
                     app:queryBackground="@android:color/transparent"
                     app:queryHint="@string/text_movie_searcher"
                     android:gravity="center_vertical"

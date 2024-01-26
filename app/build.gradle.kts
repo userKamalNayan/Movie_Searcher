@@ -70,4 +70,7 @@ dependencies {
 
     //reflection
     implementation(Dependencies.kotlinReflection)
+
+    //lottie
+    implementation(Dependencies.lottie)
 }

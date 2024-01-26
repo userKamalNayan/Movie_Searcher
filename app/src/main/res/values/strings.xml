@@ -7,4 +7,5 @@
     <string name="text_sort_by_rating">Rating</string>
     <string name="text_sort_by_default">Default</string>
     <string name="text_sort_by">Sort By</string>
+    <string name="tv_hint_search">Click to <font color="#FF5722">search</font> a <font color="#19347F">Movie</font>"</string>
 </resources>

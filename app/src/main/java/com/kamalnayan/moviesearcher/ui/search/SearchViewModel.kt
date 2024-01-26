@@ -73,30 +73,36 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
 
     private var movieRawList: List<SearchItem>? = null
 
-    private val _moviesModifiedList by lazy { MutableLiveData<List<SearchItem>>() }
-    val moviesList: LiveData<List<SearchItem>> by lazy { _moviesModifiedList }
+    private val _moviesModifiedList by lazy { MutableLiveData<SearchItemVO>(SearchItemVO.AssistedSearch) }
+    val moviesList: LiveData<SearchItemVO> by lazy { _moviesModifiedList }
 
     private val _error by lazy { MutableLiveData<String>() }
     val error: LiveData<String> by lazy { _error }
 
 
-    fun resetPage(){
-        hasMoreData=true
-        pageNumber=0
+    fun resetPage() {
+        hasMoreData = true
+        pageNumber = 0
     }
+
     /**
      * Searches movie using [searchQuery] by making
      * api call to remote.
      */
     fun searchMovie(searchQuery: String) {
-        if(searchQuery.isNullOrBlank())
+        if (searchQuery.isNullOrBlank()) {
+            _moviesModifiedList.postValue(SearchItemVO.AssistedSearch)
+            resetPage()
             return
+        }
 
         viewModelScope.launch {
             if (isLoading)
                 return@launch
+
             isLoading = true
             pageNumber++
+
             if (pageNumber == 1)
                 _isFirstPageLoading.postValue(true)
 
@@ -104,12 +110,12 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
             response?.suspendOnSuccess {
                 handleSearchSuccess(this.data)
             }?.onFailure {
-                isLoading=false
+                isLoading = false
                 _isFirstPageLoading.postValue(false)
                 _error.postValue(this)
                 Log.d("api", "searchMovie: failure $this")
-            }?:{
-                isLoading=false
+            } ?: {
+                isLoading = false
                 _isFirstPageLoading.postValue(false)
                 _error.postValue("Some error occurred")
             }
@@ -125,10 +131,11 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
     private suspend fun handleSearchSuccess(data: SearchResponse) {
         if (data.response == false) {// case: error occurred and response has no data
             hasMoreData = false
-            isLoading=false
+            isLoading = false
             _isFirstPageLoading.postValue(false)
-            if(pageNumber==1) {
-                _error.postValue(data.errorMessage.orEmpty())
+            if (pageNumber == 1) {
+//                _error.postValue(data.errorMessage.orEmpty())
+                _moviesModifiedList.postValue(SearchItemVO.Error(data.errorMessage.orEmpty()))
             }
             return
         }
@@ -139,12 +146,18 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
                 val updatedList = oldList + newList
                 movieRawList = updatedList
                 val finalList = getModifiedMoviesList(updatedList)
-                _moviesModifiedList.postValue(finalList)
+                _moviesModifiedList.postValue(SearchItemVO.SearchResult(finalList))
             } else { // for first page
                 _isFirstPageLoading.postValue(false)
                 movieRawList = data.results
                 val resultWithRandomRating = data.results.map { it.setRandomRating() }
-                _moviesModifiedList.postValue(getModifiedMoviesList(resultWithRandomRating))
+                _moviesModifiedList.postValue(
+                    SearchItemVO.SearchResult(
+                        getModifiedMoviesList(
+                            resultWithRandomRating
+                        )
+                    )
+                )
             }
             lastResponseTime = SystemClock.elapsedRealtime()
             isLoading = false
@@ -156,7 +169,13 @@ class SearchViewModel @Inject constructor(private val searchMovieUseCase: Search
      */
     fun applyModifier(searchResultModifier: SearchResultModifier) {
         this.modifier = searchResultModifier
-        _moviesModifiedList.postValue(getModifiedMoviesList(movieRawList ?: emptyList()))
+        _moviesModifiedList.postValue(
+            SearchItemVO.SearchResult(
+                getModifiedMoviesList(
+                    movieRawList ?: emptyList()
+                )
+            )
+        )
     }
 
     /**

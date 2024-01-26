@@ -43,6 +43,7 @@ object Dependencies {
     val paging by lazy { "androidx.paging:paging-runtime:${Versions.paging}" }
     val javaxInject by lazy { "javax.inject:javax.inject:1" }
     val kotlinReflection by lazy { "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlinVersion}" }
+    val lottie by lazy { "com.airbnb.android:lottie:${Versions.lottieVersion}" }
 }
 
 object Module {

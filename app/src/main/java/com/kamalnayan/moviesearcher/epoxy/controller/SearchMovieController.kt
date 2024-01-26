@@ -1,21 +1,34 @@
 package com.kamalnayan.moviesearcher.epoxy.controller
 
-import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.kamalnayan.commons.constants.Constants.SPAN_SIZE_FULL
 import com.kamalnayan.commons.constants.Constants.SPAN_SIZE_HALF
-import com.kamalnayan.commons.response.model.SearchItem
+import com.kamalnayan.moviesearcher.AssistedSearchBindingModel_
+import com.kamalnayan.moviesearcher.ErrorViewBindingModel_
 import com.kamalnayan.moviesearcher.LoaderBindingModel_
+import com.kamalnayan.moviesearcher.assistedSearch
+import com.kamalnayan.moviesearcher.errorView
 import com.kamalnayan.moviesearcher.loader
 import com.kamalnayan.moviesearcher.searchItem
+import com.kamalnayan.moviesearcher.ui.search.SearchItemVO
 
 /** @Author Kamal Nayan
 Created on: 26/01/24
  **/
 class SearchMovieController : AsyncEpoxyController() {
 
-    var searchResults: List<SearchItem>? = null
+    companion object {
+        private val ASSISTED_SEARCH_QUERY= listOf("equalizer","the wolf","top")
+    }
+
+    var onAssistedSearchClick: ((String) -> Unit)? = null
+        set(value) {
+            field = value
+            requestModelBuild()
+        }
+
+    var searchViewObject: SearchItemVO? = null
         set(value) {
             field = value
             requestModelBuild()
@@ -28,9 +41,41 @@ class SearchMovieController : AsyncEpoxyController() {
         }
 
     override fun buildModels() {
-        buildSearchItems()
-        if (canLoadMore) {
-            buildLoader()
+        when (searchViewObject) {
+            SearchItemVO.AssistedSearch -> {
+                buildAssistedSearchView(searchViewObject!!)
+            }
+
+            is SearchItemVO.Error -> {
+                buildErrorView((searchViewObject as SearchItemVO.Error).message)
+            }
+
+            is SearchItemVO.SearchResult -> {
+                buildSearchItems()
+            }
+
+            null -> {
+                // do nothing
+            }
+        }
+    }
+
+    private fun buildAssistedSearchView(searchViewObject: SearchItemVO) {
+        assistedSearch {
+            id("assistedSearch")
+            onClick { model, parentView, clickedView, position ->
+                this@SearchMovieController.onAssistedSearchClick?.invoke(ASSISTED_SEARCH_QUERY.random())
+            }
+        }
+    }
+
+    private fun buildErrorView(message: String) {
+        errorView {
+            id("error")
+            errorMessage(message)
+            onClick { model, parentView, clickedView, position ->
+
+            }
         }
     }
 
@@ -41,12 +86,15 @@ class SearchMovieController : AsyncEpoxyController() {
     }
 
     private fun buildSearchItems() {
-        searchResults?.forEach {
+        (searchViewObject as SearchItemVO.SearchResult).data?.forEach {
             searchItem {
                 id(it.imdbID)
                 posterUrl(it.poster)
                 movieName(it.title)
             }
+        }
+        if (canLoadMore) {
+            buildLoader()
         }
     }
 
@@ -57,10 +105,11 @@ class SearchMovieController : AsyncEpoxyController() {
     override fun getSpanSizeLookup(): GridLayoutManager.SpanSizeLookup {
         return object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (this@SearchMovieController.adapter.getModelAtPosition(position) is LoaderBindingModel_) {
-                    SPAN_SIZE_FULL
-                } else {
-                    SPAN_SIZE_HALF
+                return when (this@SearchMovieController.adapter.getModelAtPosition(position)) {
+                    is LoaderBindingModel_ -> SPAN_SIZE_FULL
+                    is AssistedSearchBindingModel_ -> SPAN_SIZE_FULL
+                    is ErrorViewBindingModel_ -> SPAN_SIZE_FULL
+                    else -> SPAN_SIZE_HALF
                 }
             }
         }
