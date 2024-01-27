@@ -1,14 +1,12 @@
+**Multi-module project with clean architecture while following use case pattern.**
+
 This project searches movies using [OmdbApi](https://www.omdbapi.com/).
 
-**Multi-module project with clean architecture while following use case pattern**
-
 **Used**
-
 * Hilt for DI
 * Epoxy Recycler view:
     * Models using Data binding
     * Controller
-
 * Retrofit for api calls
 * Sorting Feature
 * Grid and List view type
