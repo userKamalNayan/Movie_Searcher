@@ -1,4 +1,4 @@
-This project searches movies using ![OmdbApi](https://www.omdbapi.com/).
+This project searches movies using [OmdbApi](https://www.omdbapi.com/).
 
 **Multi-module project with clean architecture while following use case pattern**
 
