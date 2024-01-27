@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DimenRes
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.marginBottom
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
@@ -16,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.kamalnayan.commons.constants.Constants.DEFAULT_ANIMATION_DURATION
 import com.kamalnayan.commons.utils.SafeClickListener
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.onStart
 
 /** @Author Kamal Nayan
 Created on: 26/01/24
@@ -42,7 +46,7 @@ fun EpoxyRecyclerView.loadMoreListener(threshold: Int = 6, loadMoreData: () -> U
                     (this@loadMoreListener.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                 }
             }
-            val totalItems = this@loadMoreListener.adapter?.itemCount?:return
+            val totalItems = this@loadMoreListener.adapter?.itemCount ?: return
 
             if ((lastVisibleItemPosition + threshold) >= totalItems) {
                 Log.d("load-more", "onScrolled:  $lastVisibleItemPosition and total = $totalItems")
@@ -86,9 +90,9 @@ fun View.showTouchReleaseAnimation() {
 
 
 fun View.setMarginFromDimen(
-    @DimenRes marginTop: Int=0,
-    @DimenRes marginBottom: Int=0,
-    @DimenRes marginStart: Int=0,
+    @DimenRes marginTop: Int = 0,
+    @DimenRes marginBottom: Int = 0,
+    @DimenRes marginStart: Int = 0,
     @DimenRes marginEnd: Int = 0
 ) {
     val layoutParams = ViewGroup.MarginLayoutParams(
@@ -101,9 +105,10 @@ fun View.setMarginFromDimen(
                 if (marginBottom == 0) this@setMarginFromDimen.marginBottom else getDimensionPixelOffset(
                     marginBottom
                 )
-            topMargin = if (marginTop == 0) this@setMarginFromDimen.marginTop else getDimensionPixelOffset(
-                marginTop
-            )
+            topMargin =
+                if (marginTop == 0) this@setMarginFromDimen.marginTop else getDimensionPixelOffset(
+                    marginTop
+                )
             leftMargin =
                 if (marginStart == 0) this@setMarginFromDimen.marginStart else getDimensionPixelOffset(
                     marginStart
@@ -114,5 +119,29 @@ fun View.setMarginFromDimen(
                 )
         }
     }
-    this.layoutParams=layoutParams
+    this.layoutParams = layoutParams
+}
+
+
+fun SearchView.queryChanges(): kotlinx.coroutines.flow.Flow<String?> {
+    return callbackFlow<String?> {
+        val listener = object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                trySend(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                trySend(newText)
+                return true
+            }
+        }
+        setOnQueryTextListener(listener)
+        awaitClose {
+            this@queryChanges.setOnQueryTextListener(null)
+        }
+    }.onStart {
+        emit(query.toString())
+    }
+
 }

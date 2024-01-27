@@ -3,9 +3,9 @@ package com.kamalnayan.moviesearcher.ui.search
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.DrawableRes
-import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,12 +15,17 @@ import com.kamalnayan.commons.annotation.ViewType
 import com.kamalnayan.commons.base.BaseFragment
 import com.kamalnayan.commons.extensions.Empty
 import com.kamalnayan.commons.extensions.loadMoreListener
+import com.kamalnayan.commons.extensions.queryChanges
 import com.kamalnayan.commons.modifier.SearchResultModifier
 import com.kamalnayan.moviesearcher.R
 import com.kamalnayan.moviesearcher.databinding.FragmentSearchMovieBinding
 import com.kamalnayan.moviesearcher.epoxy.controller.SearchMovieController
 import com.kamalnayan.moviesearcher.ui.bts.BtsSearchResultModifier
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 
 @AndroidEntryPoint
@@ -101,18 +106,10 @@ class SearchMovieFragment :
                     handleShowFilterClick()
                 }
 
-                searchView.setOnQueryTextListener(object : OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        onNewQuery(query.toString())
-                        return false
-                    }
+                searchView.queryChanges().debounce(500).distinctUntilChanged().onEach {
+                    onNewQuery(it.orEmpty())
+                }.launchIn(lifecycleScope)
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        onNewQuery(newText.toString())
-                        return true
-                    }
-
-                })
             }
 
             with(controller) {
