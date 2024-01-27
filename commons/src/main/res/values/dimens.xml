@@ -10,5 +10,5 @@
     <dimen name="vertical_padding_large">8dp</dimen>
     <dimen name="corner_smooth">6dp</dimen>
     <dimen name="bottom_sheet_corner">10dp</dimen>
-    <dimen name="item_margin_top">10dp</dimen>
+    <dimen name="item_margin_small">10dp</dimen>
 </resources>

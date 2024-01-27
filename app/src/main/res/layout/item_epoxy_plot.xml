@@ -19,7 +19,7 @@
             style="@style/TextAppearance.AppCompat.Movie.Plot"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/item_margin_top"
+            android:layout_marginTop="@dimen/item_margin_small"
             android:text="@{plot}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

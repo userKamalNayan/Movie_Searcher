@@ -7,4 +7,5 @@
     <color name="text_color_key">#3E3B41</color>
     <color name="text_color_value">#221E25</color>
     <color name="text_color_value_light">#68636D</color>
+    <color name="ripple_color">#99D3D3D3</color>
 </resources>

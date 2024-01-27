@@ -98,7 +98,7 @@ class DetailsController : AsyncEpoxyController() {
     private fun buildSpace(key: String) {
         space {
             id("space_$key")
-            margin(com.kamalnayan.commons.R.dimen.item_margin_top)
+            margin(com.kamalnayan.commons.R.dimen.item_margin_small)
         }
     }
 }

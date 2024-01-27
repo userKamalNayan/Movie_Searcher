@@ -21,7 +21,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:rippleColor="#99D3D3D3"
+        app:rippleColor="@color/ripple_color"
         android:clickable="true"
         app:cardUseCompatPadding="true">
 
