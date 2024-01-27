@@ -12,6 +12,10 @@
         <variable
             name="movieName"
             type="String" />
+
+        <variable
+            name="imdbId"
+            type="String" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -46,15 +50,13 @@
                 android:id="@+id/tv_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
                 android:text="@{movieName}"
-                android:maxLines="2"
-                android:ellipsize="end"
+                style="@style/TextAppearance.AppCompat.Movie.Name"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_poster"
-                tools:text="Top Gun" />
+                tools:text="Top Gun " />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

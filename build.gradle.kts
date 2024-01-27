@@ -7,6 +7,7 @@ plugins {
     id("org.jetbrains.kotlin.android") version Versions.kotlinVersion apply false
     id("com.android.library") version "8.2.1" apply false
     id("com.google.dagger.hilt.android") version Versions.hilt apply false
+    id("androidx.navigation.safeargs.kotlin") version Versions.safeArgs apply false
 }
 
 //subprojects {

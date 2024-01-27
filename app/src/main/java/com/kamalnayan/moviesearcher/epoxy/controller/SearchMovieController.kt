@@ -4,10 +4,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.kamalnayan.commons.constants.Constants.SPAN_SIZE_FULL
 import com.kamalnayan.commons.constants.Constants.SPAN_SIZE_HALF
+import com.kamalnayan.commons.extensions.setSafeClickListener
 import com.kamalnayan.moviesearcher.AssistedSearchBindingModel_
 import com.kamalnayan.moviesearcher.ErrorViewBindingModel_
 import com.kamalnayan.moviesearcher.LoaderBindingModel_
 import com.kamalnayan.moviesearcher.assistedSearch
+import com.kamalnayan.moviesearcher.databinding.ItemEpoxySearchItemBinding
 import com.kamalnayan.moviesearcher.errorView
 import com.kamalnayan.moviesearcher.loader
 import com.kamalnayan.moviesearcher.searchItem
@@ -40,6 +42,12 @@ class SearchMovieController : AsyncEpoxyController() {
             "The Departed"
         )
     }
+
+    var onMovieItemClick: ((String) -> Unit)? = null
+        set(value) {
+            field = value
+            requestModelBuild()
+        }
 
     var onAssistedSearchClick: ((String) -> Unit)? = null
         set(value) {
@@ -114,6 +122,15 @@ class SearchMovieController : AsyncEpoxyController() {
                 id(it.imdbID)
                 posterUrl(it.poster)
                 movieName(it.title)
+                imdbId(it.imdbID)
+                onBind { model, view, position ->
+                    val binding=view.dataBinding as ItemEpoxySearchItemBinding
+                    binding.root.setSafeClickListener {
+                        this@SearchMovieController.onMovieItemClick?.invoke(
+                           binding.imdbId.orEmpty()
+                        )
+                    }
+                }
             }
         }
         if (canLoadMore) {

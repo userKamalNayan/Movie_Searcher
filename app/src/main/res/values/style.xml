@@ -5,4 +5,57 @@
         <item name="shapeCornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="TextAppearance.AppCompat.Headline">
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">@dimen/text_large</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Title">
+        <item name="android:paddingStart">@dimen/horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/horizontal_padding</item>
+        <item name="android:paddingTop">@dimen/vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/vertical_padding</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Movie.Name" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textAlignment">center</item>
+        <item name="android:paddingHorizontal">@dimen/horizontal_padding_small</item>
+        <item name="android:paddingVertical">@dimen/vertical_padding_large</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Movie.Key" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:paddingHorizontal">@dimen/horizontal_padding_small</item>
+        <item name="android:paddingVertical">@dimen/vertical_padding</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="maxLines">1</item>
+        <item name="layout_constraintWidth_percent">0.4</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/text_color_key</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Movie.Value" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:paddingHorizontal">@dimen/horizontal_padding_small</item>
+        <item name="android:paddingVertical">@dimen/vertical_padding</item>
+        <item name="maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/text_color_value</item>
+    </style>
+
+
+    <style name="TextAppearance.AppCompat.Movie.Plot" parent="TextAppearance.AppCompat.Movie.Value">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/text_color_value_light</item>
+    </style>
 </resources>

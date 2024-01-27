@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="posterUrl"
+            type="String" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="released"
+            type="String" />
+
+        <variable
+            name="genre"
+            type="String" />
+
+        <variable
+            name="actors"
+            type="String" />
+
+        <variable
+            name="plot"
+            type="String" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_poster"
+            loadImageByUrl="@{posterUrl}"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toTopOf="@id/tv_title"
+            app:layout_constraintDimensionRatio="9:16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="400dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/TextAppearance.AppCompat.Movie.Name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{title}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_poster"
+            tools:text="Gaga" />
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_release_key"-->
+        <!--            style="@style/TextAppearance.AppCompat.Movie.Key"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="Released On :"-->
+        <!--            app:layout_constraintBottom_toTopOf="@id/release_details_barrier"-->
+        <!--            app:layout_constraintEnd_toStartOf="@id/tv_release_value"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/tv_title" />-->
+
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_release_value"-->
+        <!--            style="@style/TextAppearance.AppCompat.Movie.Value"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="@{released}"-->
+        <!--            app:layout_constraintBottom_toTopOf="@id/release_details_barrier"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toEndOf="@id/tv_release_key"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/tv_title"-->
+        <!--            tools:text="24/10/2024" />-->
+
+        <!--        <androidx.constraintlayout.widget.Barrier-->
+        <!--            android:id="@+id/release_details_barrier"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:barrierDirection="bottom"-->
+        <!--            app:constraint_referenced_ids="tv_release_key,tv_release_value" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_genre_key"-->
+        <!--            style="@style/TextAppearance.AppCompat.Movie.Key"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:layout_constraintBottom_toTopOf="@id/genre_details_barrier"-->
+        <!--            android:text="Genre :"-->
+        <!--            app:layout_constraintEnd_toStartOf="@id/tv_genre_value"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/release_details_barrier" />-->
+
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_genre_value"-->
+        <!--            style="@style/TextAppearance.AppCompat.Movie.Value"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="@{genre}"-->
+        <!--            app:layout_constraintBottom_toTopOf="@id/genre_details_barrier"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toEndOf="@id/tv_genre_key"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/release_details_barrier"-->
+        <!--            tools:text="24/10/2024" />-->
+
+        <!--        <androidx.constraintlayout.widget.Barrier-->
+        <!--            android:id="@+id/genre_details_barrier"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:barrierDirection="bottom"-->
+        <!--            app:constraint_referenced_ids="tv_genre_key,tv_genre_value" />-->
+
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_actor_key"-->
+        <!--            style="@style/TextAppearance.AppCompat.Movie.Key"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:layout_constraintBottom_toTopOf="@id/actors_details_barrier"-->
+        <!--            android:text="Actors :"-->
+        <!--            app:layout_constraintEnd_toStartOf="@id/tv_actor_value"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/genre_details_barrier" />-->
+
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_actor_value"-->
+        <!--            style="@style/TextAppearance.AppCompat.Movie.Value"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="@{genre}"-->
+        <!--            app:layout_constraintBottom_toTopOf="@id/actors_details_barrier"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toEndOf="@id/tv_genre_key"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/genre_details_barrier"-->
+        <!--            tools:text="Kamal Nayan" />-->
+
+        <!--        <androidx.constraintlayout.widget.Barrier-->
+        <!--            android:id="@+id/actors_details_barrier"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:barrierDirection="bottom"-->
+        <!--            app:constraint_referenced_ids="tv_actor_key,tv_actor_value" />-->
+        <!--        -->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

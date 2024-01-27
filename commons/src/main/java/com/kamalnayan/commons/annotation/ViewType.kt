@@ -1,8 +1,10 @@
 package com.kamalnayan.commons.annotation
 
+import android.os.Parcelable
 import androidx.annotation.IntDef
 import com.kamalnayan.commons.annotation.ViewType.Companion.VIEW_TYPE_GRID
 import com.kamalnayan.commons.annotation.ViewType.Companion.VIEW_TYPE_LIST
+import kotlinx.parcelize.Parcelize
 
 /** @Author Kamal Nayan
 Created on: 26/01/24

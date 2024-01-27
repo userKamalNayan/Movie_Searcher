@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.epoxy.DiffResult
@@ -72,6 +73,7 @@ class SearchMovieFragment :
             toolbar.tvTitle.text = R.string.text_movie_searcher.toStringFromResourceId()
             epoxyRecycler.setController(controller)
         }
+        handleViewTypeSelection()
     }
 
     override fun setData() {
@@ -115,10 +117,29 @@ class SearchMovieFragment :
 
             with(controller) {
                 onAssistedSearchClick = {
-                    binding.toolbar.searchView.setQuery(it,true)
+                    binding.toolbar.searchView.setQuery(it, true)
+                }
+
+                onMovieItemClick = {
+                    findNavController().navigate(
+                        SearchMovieFragmentDirections.actionSearchMovieFragmentToMovieDetailsFragment(
+                            it
+                        )
+                    )
                 }
             }
         }
+    }
+
+    private fun handleViewTypeSelectorClick() {
+        selectedViewType = when (selectedViewType) {
+            ViewType.VIEW_TYPE_GRID -> ViewType.VIEW_TYPE_LIST
+            ViewType.VIEW_TYPE_LIST -> ViewType.VIEW_TYPE_GRID
+            else -> {
+                ViewType.VIEW_TYPE_GRID
+            }
+        }
+        handleViewTypeSelection()
     }
 
     /**
@@ -187,17 +208,15 @@ class SearchMovieFragment :
      * [GridLayoutManager] or [LinearLayoutManager] is applied to
      * [R.id.epoxy_recycler] as per user selection
      */
-    private fun handleViewTypeSelectorClick() {
+    private fun handleViewTypeSelection() {
         with(binding) {
             when (selectedViewType) {
-                ViewType.VIEW_TYPE_LIST -> {
-                    selectedViewType = ViewType.VIEW_TYPE_GRID
+                ViewType.VIEW_TYPE_GRID -> {
                     epoxyRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
                     setSelectorImageRes(R.drawable.ic_grid)
                 }
 
-                ViewType.VIEW_TYPE_GRID -> {
-                    selectedViewType = ViewType.VIEW_TYPE_LIST
+                ViewType.VIEW_TYPE_LIST -> {
                     epoxyRecycler.layoutManager = LinearLayoutManager(
                         requireContext(),
                         LinearLayoutManager.VERTICAL,
